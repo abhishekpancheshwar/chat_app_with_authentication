@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 
-mongoose.connect("mongdb: //127.0.0.1:27017/scatch");
+mongoose.connect("mongodb://127.0.0.1:27017/scatch");
 
 
 const ownerSchema = mongoose.Schema({
@@ -21,3 +21,4 @@ const ownerSchema = mongoose.Schema({
 });
 
 module.exports = mongoose.model("owner", ownerSchema);
+
