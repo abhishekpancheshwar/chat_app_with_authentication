@@ -9,18 +9,18 @@ router.get("/", function(req, res){
 });
 
 router.get('/shop', isLoggedIn, async function (req, res){
-    let products = await productModel.find();
-    console.log(products);
-    res.redirect("shop", { products });
+    try {
+        let products = await productModel.find();
+        res.render("shop", { products });
+    } catch (error) {
+        res.status(500).send("Error fetching products");
+    }
 });
 
-router.get("/logout", isLoggedIn, async function (req, res){
-    try {
-        const products = await productModel.find(); // Assuming you're using Mongoose
-        res.render('shop', { products: products });
-      } catch (error) {
-        res.send(error);
-      }
-})
+router.get("/logout", isLoggedIn, function (req, res){
+    res.clearCookie("token");
+    req.flash("success", "Logged out successfully");
+    res.redirect("/");
+});
 
 module.exports = router;

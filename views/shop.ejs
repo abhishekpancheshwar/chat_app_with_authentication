@@ -1,50 +1,71 @@
 <%- include('./partials/header') %>
-    <div class="w-full h-screen flex items-start px-20 py-20">
-        <div class="w-[25%] flex h-screen flex-col items-start">
-            <div class="flex items-center gap-2">
-                <h3>sort by</h3>
-                <form action="/shop">
-                    <select class="border-[1px] px-2 py-1" name="sortby" id="">
-                        <option value="popular">Popular</option>
-                        <option value="newest">Newest</option>
-                    </select>
-                </form>
+
+<div class="min-h-screen bg-gradient-to-br from-purple-400 via-pink-500 to-red-500 p-4 md:p-8 lg:p-12">
+  <div class="max-w-7xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
+    <div class="flex flex-col md:flex-row">
+      <!-- Sidebar -->
+      <div class="w-full md:w-1/4 bg-gray-100 p-6 border-r border-gray-200">
+        <div class="space-y-8">
+          <!-- Sort By -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Sort by</h3>
+            <form action="/shop">
+              <select name="sortby" class="w-full bg-white border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                <option value="popular">Popular</option>
+                <option value="newest">Newest</option>
+                <option value="price-low-high">Price: Low to High</option>
+                <option value="price-high-low">Price: High to Low</option>
+              </select>
+            </form>
+          </div>
+
+          <!-- Categories -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Categories</h3>
+            <div class="space-y-2">
+              <a href="/new-collection" class="block text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out">New Collection</a>
+              <a href="/all-products" class="block text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out">All Products</a>
+              <a href="/discounted" class="block text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out">Discounted Products</a>
             </div>
-            <div class="flex flex-col mt-20">
-                <a class="block w-fit mb-2" href="">New Collection</a>
-                <a class="block w-fit mb-2" href="">All Products</a>
-                <a class="block w-fit mb-2" href="">Discounted Products</a>
+          </div>
+
+          <!-- Filters -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-2">Filters</h3>
+            <div class="space-y-2">
+              <a href="/shop" class="block text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out">Availability</a>
+              <a href="/shop" class="block text-indigo-600 hover:text-indigo-800 transition duration-150 ease-in-out">Discount</a>
             </div>
-            <div class="mt-32">
-                <a class="block w-fit mb-2" href="">Filter by :</a>
-                <a class="block w-fit mb-2" href="">Availability</a>
-                <a class="block w-fit mb-2" href="">Discount</a>
-            </div>
+          </div>
         </div>
-        <div class="w-[75%] flex flex-col gap-5 h-screen">
-            <div class="flex items-start gap-5">
-                <% products.forEach(function(product){ %>
-                    <div class="w-60">
-                        <div class="w-full h-52 flex items-center justify-center bg-[<%= product.bgcolor %>]">
-                            <img class="h-[12rem]" src="data:image/jpeg;base64,<%= product.image.toString('base64') %>"
-                                alt="">
-                        </div>
-                        <div
-                            class="flex justify-between bg-[<%= product.panelcolor %>] items-center px-4 py-4 text-[<%= product.textcolor %>]">
-                            <div>
-                                <h3>
-                                    <%= product.name %>
-                                </h3>
-                                <h4>₹ <%= product.price %>
-                                </h4>
-                            </div>
-                            <a class="w-7 h-7 flex items-center justify-center rounded-full bg-white" href="">
-                                <i class="ri-add-line"></i>
-                            </a>
-                        </div>
-                    </div>
-                    <% }) %>
+      </div>
+
+      <!-- Main Content -->
+      <div class="w-full md:w-3/4 p-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <% products.forEach(function(product){ %>
+            <div class="bg-white rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-shadow duration-300 ease-in-out">
+              <div class="relative h-64 bg-gradient-to-r from-<%= product.bgcolor %> to-<%= product.panelcolor %> flex items-center justify-center p-4">
+                <img class="max-h-full max-w-full object-contain" src="data:image/jpeg;base64,<%= product.image.toString('base64') %>" alt="<%= product.name %>">
+                <div class="absolute top-2 right-2 bg-yellow-400 text-gray-800 px-2 py-1 rounded-full text-xs font-bold">NEW</div>
+              </div>
+              <div class="p-4">
+                <h3 class="text-xl font-semibold text-gray-800 mb-2"><%= product.name %></h3>
+                <div class="flex justify-between items-center">
+                  <p class="text-2xl font-bold text-indigo-600">₹<%= product.price %></p>
+                  <button class="bg-indigo-500 hover:bg-indigo-600 text-white rounded-full p-2 transition duration-150 ease-in-out">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
             </div>
+          <% }) %>
         </div>
+      </div>
     </div>
-    <%- include('./partials/footer') %>
+  </div>
+</div>
+
+<%- include('./partials/footer') %>
