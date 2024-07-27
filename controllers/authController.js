@@ -37,7 +37,7 @@ exports.loginUser = async function (req, res) {
         if(isMatch) {
             let token = generateToken(user);
             res.cookie("token", token, { httpOnly: true });
-            res.redirect("/shop");
+            res.redirect("/chat");
         } else {
             res.status(400).send("Email or password is incorrect");
         }

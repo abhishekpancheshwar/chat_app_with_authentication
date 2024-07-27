@@ -36,3 +36,28 @@ app.use("/products", productsRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Socket 
+const http = require('http');
+const socketIo = require('socket.io');
+const server = http.createServer(app);
+const io = require('socket.io')(server); // where `server` is your HTTP server
+
+
+app.use(express.static('public')); // Serve static files from 'public' directory
+
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on('message', (msg) => {
+        io.emit('message', msg); // Broadcast message to all clients
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
+
+server.listen(8000, () => {
+    console.log('Server running on port 8000');
+});

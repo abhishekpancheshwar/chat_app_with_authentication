@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Chat Web</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a4e69;
+            --secondary-color: #9a8c98;
+            --background-color: #f2e9e4;
+            --text-color: #22223b;
+            --incoming-msg-color: #c9ada7;
+            --outgoing-msg-color: #9a8c98;
+        }
+
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: var(--background-color);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .chat__section {
+            width: 800px;
+            max-width: 95%;
+            background: #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+        }
+
+        .brand {
+            padding: 20px;
+            background: var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .brand img {
+            filter: invert(1);
+        }
+
+        .brand h1 {
+            text-transform: uppercase;
+            font-size: 20px;
+            color: #fff;
+            margin-left: 10px;
+            font-weight: 500;
+        }
+
+        .message__area {
+            flex-grow: 1;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+        }
+
+        .message__area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .message__area::-webkit-scrollbar-thumb {
+            background-color: var(--secondary-color);
+            border-radius: 3px;
+        }
+
+        textarea {
+            width: 100%;
+            border: none;
+            padding: 20px;
+            font-size: 16px;
+            outline: none;
+            background: var(--background-color);
+            color: var(--text-color);
+            border-top: 1px solid #e0e0e0;
+            resize: none;
+            transition: all 0.3s ease;
+        }
+
+        textarea:focus {
+            background: #fff;
+            box-shadow: 0 -5px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .message {
+            padding: 15px 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            max-width: 300px;
+            position: relative;
+            font-size: 14px;
+            line-height: 1.4;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .incoming {
+            background: var(--incoming-msg-color);
+            color: var(--text-color);
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        .outgoing {
+            background: var(--outgoing-msg-color);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .message h4 {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            color: var(--text-color);
+            font-size: 12px;
+            font-weight: 500;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .chat__section {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+            }
+
+            .message {
+                max-width: 75%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="chat__section">
+        <div class="brand">
+            <img height="40" src="..//images/chat1.png" alt="Chat Logo">
+            <h1>Advanced Chat</h1>
+        </div>
+        <div class="message__area"></div>
+        <div class="input__area">
+            <textarea id="textarea" placeholder="Write a message..."></textarea>
+        </div>
+    </section>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io()
+        let name;
+        let textarea = document.querySelector('#textarea')
+        let messageArea = document.querySelector('.message__area')
+        
+        do {
+            name = prompt('Please Provide your Identity: ')
+        } while(!name)
+
+        textarea.addEventListener('keyup', (e) => {
+            if(e.key === 'Enter') {
+                sendMessage(e.target.value)
+            }
+        })
+
+        function sendMessage(message) {
+            let msg = {
+                user: name,
+                message: message.trim()
+            }
+            appendMessage(msg, 'outgoing')
+            textarea.value = ''
+            scrollToBottom()
+
+            socket.emit('message', msg)
+        }
+
+        function appendMessage(msg, type) {
+            let mainDiv = document.createElement('div')
+            let className = type
+            mainDiv.classList.add(className, 'message')
+
+            let markup = `
+                <h4>${msg.user}</h4>
+                <p>${msg.message}</p>
+            `
+            mainDiv.innerHTML = markup
+            messageArea.appendChild(mainDiv)
+        }
+
+        socket.on('message', (msg) => {
+            appendMessage(msg, 'incoming')
+            scrollToBottom()
+        })
+
+        function scrollToBottom() {
+            messageArea.scrollTop = messageArea.scrollHeight
+        }
+    </script>
+</body>
+</html>

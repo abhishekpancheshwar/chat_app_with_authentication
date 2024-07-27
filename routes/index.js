@@ -8,10 +8,10 @@ router.get("/", function(req, res){
     res.render("index", { error });
 });
 
-router.get('/shop', isLoggedIn, async function (req, res){
+router.get('/chat', isLoggedIn, async function (req, res){
     try {
         let products = await productModel.find();
-        res.render("shop", { products });
+        res.render("chat", { products });
     } catch (error) {
         res.status(500).send("Error fetching products");
     }
